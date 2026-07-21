@@ -8,7 +8,7 @@ import { getAllProgress } from "../../api/progress.js";
 import { GetAllSelfManga } from "../../api/selfmanga.js";
 import { GetChaptersByManga } from "../../api/chapter.js";
 import { getLibraryWithLatest } from "../../api/library";
-import { makeCoverUrl } from "../../utils/cover.js";
+import { makeCoverUrl } from "../../utils/url.js";
 
 
 export default function Home() {
