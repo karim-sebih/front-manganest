@@ -8,7 +8,7 @@ import { getAllProgress } from "../../api/progress.js";
 import { GetAllSelfManga } from "../../api/selfmanga.js";
 import { GetChaptersByManga } from "../../api/chapter.js";
 import { getLibraryWithLatest } from "../../api/library";
-
+import { makeCoverUrl } from "../../utils/cover.js";
 
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
   const [approvedMangas, setApprovedMangas] = useState([]);
   const [libraryLatest, setLibraryLatest] = useState([]);
 
-
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   const LIMIT = 20;
 
@@ -144,7 +144,7 @@ export default function Home() {
               }} className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={`http://localhost:3000${manga.cover}`}
+                src={makeCoverUrl(manga.cover, apiBaseUrl)}
                 alt={manga.title}
                 loading="lazy"
 
