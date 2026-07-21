@@ -17,6 +17,7 @@ export default function CreatorDashboard() {
         title: "",
         description: ""
     });
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         async function fetchMangas() {
@@ -144,7 +145,7 @@ export default function CreatorDashboard() {
                                         className="cursor-pointer flex gap-3 items-center"
                                     >
                                         <img
-                                            src={`http://localhost:3000${manga.cover}`}
+                                            src={`${API_URL}${manga.cover}`}
                                             alt={manga.title}
                                             className="w-12 h-16 object-cover rounded"
                                         />

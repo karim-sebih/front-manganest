@@ -10,6 +10,7 @@ export default function Reader() {
 
     const { prevChapter, nextChapter } = context;
 
+    const API_URL = import.meta.env.VITE_API_URL;
 
 
     const [chapter, setChapter] = useState(null);
@@ -58,7 +59,7 @@ export default function Reader() {
                 {pages.map((page) => (
                     <img
                         key={page.id}
-                        src={`http://localhost:3000${page.image_url}`}
+                        src={`${API_URL}${page.image_url}`}
                         className="w-full max-w-2xl rounded"
                         loading="lazy"
                         alt="page"

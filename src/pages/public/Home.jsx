@@ -23,7 +23,7 @@ export default function Home() {
   const [libraryLatest, setLibraryLatest] = useState([]);
 
 
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const LIMIT = 20;
 
   const chapterLanguage =
@@ -144,7 +144,7 @@ export default function Home() {
               }} className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={`http://localhost:3000${manga.cover}`}
+                src={`${API_URL}${manga.cover}`}
                 alt={manga.title}
                 loading="lazy"
 
@@ -185,7 +185,7 @@ export default function Home() {
               className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={manga.cover}
+                src={`${API_URL}${manga.cover}`}
                 alt={manga.title}
                 className="w-24 h-36 object-cover rounded-xl"
                 onError={(e) => {

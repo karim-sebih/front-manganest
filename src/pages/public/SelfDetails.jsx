@@ -11,7 +11,7 @@ export default function SelfDetails() {
     const [chapters, setChapters] = useState([]);
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const API_URL = import.meta.env.VITE_API_URL;
     const sortedChapters = [...chapters].sort(
         (a, b) => b.chapter_number - a.chapter_number
     );
@@ -79,7 +79,7 @@ export default function SelfDetails() {
             <div className="flex gap-8">
 
                 <img
-                    src={`http://localhost:3000${manga.cover}`}
+                    src={`${API_URL}${manga.cover}`}
                     alt={manga.title}
                     className="w-60 h-[350px] object-cover rounded-xl"
                 />

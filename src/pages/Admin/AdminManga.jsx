@@ -12,7 +12,7 @@ export default function AdminManga() {
     const [previewModal, setPreviewModal] = useState(false);
     const [previewPages, setPreviewPages] = useState([]);
     const [previewMangaId, setPreviewMangaId] = useState(null);
-
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         fetchMangas();
@@ -113,7 +113,7 @@ export default function AdminManga() {
                     >
                         <div className="flex items-center gap-4">
                             <img
-                                src={`http://localhost:3000${manga.cover}`}
+                                src={`${API_URL}${manga.cover}`}
                                 alt=""
                                 className="w-14 h-20 object-cover rounded"
                             />
@@ -224,7 +224,7 @@ export default function AdminManga() {
                             {previewPages.map((page) => (
                                 <img
                                     key={page.id}
-                                    src={`http://localhost:3000${page.image_url}`}
+                                    src={`${API_URL}${page.image_url}`}
                                     className="w-full max-w-4xl rounded"
                                     loading="lazy"
                                     alt="page"
