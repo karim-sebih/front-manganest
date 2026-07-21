@@ -14,7 +14,6 @@ export default function Settings() {
     const [tags, setTags] = useState(JSON.parse(localStorage.getItem("tags")) || { included: [], excluded: [] });
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL;
 
 
     useEffect(() => {
@@ -75,7 +74,7 @@ export default function Settings() {
 
     const handleDeleteAccount = async () => {
         try {
-            const res = await fetch(`${API_URL}/users/me`, {
+            const res = await fetch("http://localhost:3000/users/me", {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
