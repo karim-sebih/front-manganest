@@ -27,6 +27,7 @@ export default function Login() {
         },
         onSuccess: (response) => {
             localStorage.setItem("token", response.data?.token);
+            localStorage.setItem("role", response.data?.role);
             navigate("/");
 
         },
