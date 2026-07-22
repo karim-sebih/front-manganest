@@ -21,7 +21,11 @@ export default function Home() {
   const [progressList, setProgressList] = useState([]);
   const [approvedMangas, setApprovedMangas] = useState([]);
   const [libraryLatest, setLibraryLatest] = useState([]);
-
+  const normalizeCover = (cover) => {
+    if (!cover) return null;
+    if (cover.startsWith("http")) return cover;
+    return `https://back-manganest.onrender.com${cover}`;
+  };
 
 
   const LIMIT = 20;
