@@ -185,7 +185,7 @@ export default function Home() {
               className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={manga.cover}
+                src={normalizeCover(manga.cover)}
                 alt={manga.title}
                 className="w-24 h-36 object-cover rounded-xl"
                 onError={(e) => {
@@ -223,8 +223,8 @@ export default function Home() {
               className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={item.cover}
-                alt=""
+                src={normalizeCover(item.cover)}
+                alt="manga.progress"
                 className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
                 onError={(e) => {
                   e.target.src = "https://picsum.photos/300/420?random=1";
@@ -269,10 +269,8 @@ export default function Home() {
             >
               <div className="flex-shrink-0">
                 <img
-                  src={
-                    chapter.cover ||
-                    "Rien à afficher"
-                  }
+                  src={normalizeCover(chapter.cover) || "https://picsum.photos/300/420?random=1"}
+                  alt={chapter.mangaTitle}
 
                   alt={chapter.mangaTitle}
                   className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
