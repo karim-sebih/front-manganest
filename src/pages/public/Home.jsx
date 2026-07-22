@@ -9,10 +9,26 @@ import { GetAllSelfManga } from "../../api/selfmanga.js";
 import { GetChaptersByManga } from "../../api/chapter.js";
 import { getLibraryWithLatest } from "../../api/library";
 
+const BACK_URL = "https://back-manganest.onrender.com";
+const fallbackImg = "https://picsum.photos/300/420?random=1";
 
+function coverToUrl(cover) {
+  if (!cover) return null;
+  if (typeof cover !== "string") return null;
+
+  // URL complète
+  if (cover.startsWith("http://") || cover.startsWith("https://")) return cover;
+
+  // chemin relatif renvoyé par ton API
+  if (cover.startsWith("/")) return `${BACK_URL}${cover}`;
+
+  // sinon => pas une URL exploitable
+  return null;
+}
 
 export default function Home() {
   const { t } = useTranslation();
+
   const [mangas, setMangas] = useState([]);
   const [latestChapters, setLatestChapters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,28 +38,18 @@ export default function Home() {
   const [approvedMangas, setApprovedMangas] = useState([]);
   const [libraryLatest, setLibraryLatest] = useState([]);
 
-
-
   const LIMIT = 20;
 
   const chapterLanguage =
     localStorage.getItem("chapterLanguage") || "fr";
 
-  const contentFilters = JSON.parse(
-    localStorage.getItem("contentFilters")
-  ) || ["safe", "suggestive"];
+  const contentFilters =
+    JSON.parse(localStorage.getItem("contentFilters")) || ["safe", "suggestive"];
 
   const tags =
-    JSON.parse(localStorage.getItem("tags")) || {
-      included: [],
-      excluded: []
-    };
-
+    JSON.parse(localStorage.getItem("tags")) || { included: [], excluded: [] };
 
   const navigate = useNavigate();
-
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,25 +61,39 @@ export default function Home() {
           chapterData,
           progressData,
           selfMangaData,
-          libraryData
+          libraryData,
         ] = await Promise.all([
-          getAllManga(LIMIT, (page - 1) * LIMIT, contentFilters, tags.included, tags.excluded),
-          getLatestChapters(LIMIT, (page - 1) * LIMIT, chapterLanguage, contentFilters, tags.included, tags.excluded),
+          getAllManga(
+            LIMIT,
+            (page - 1) * LIMIT,
+            contentFilters,
+            tags.included,
+            tags.excluded
+          ),
+          getLatestChapters(
+            LIMIT,
+            (page - 1) * LIMIT,
+            chapterLanguage,
+            contentFilters,
+            tags.included,
+            tags.excluded
+          ),
           getAllProgress().catch(() => []),
           GetAllSelfManga().catch(() => []),
-          getLibraryWithLatest().catch(() => [])
+          getLibraryWithLatest().catch(() => []),
         ]);
 
         const approved = (selfMangaData || [])
-          .filter(m => m.status === "approved")
+          .filter((m) => m.status === "approved")
           .slice(0, 10);
 
-        //  last chapter 
         const mangasWithChapters = await Promise.all(
           approved.map(async (m) => {
             try {
               const chapters = await GetChaptersByManga(m.id);
-              const last = chapters?.sort((a, b) => b.chapter_number - a.chapter_number)[0];
+              const last = chapters?.sort(
+                (a, b) => b.chapter_number - a.chapter_number
+              )[0];
 
               return { ...m, lastChapter: last || null };
             } catch {
@@ -87,7 +107,6 @@ export default function Home() {
         setMangas(mangaData?.mangas || []);
         setLatestChapters(chapterData?.chapters || []);
         setProgressList(progressData);
-
       } catch (err) {
         console.error(err);
         setError("Impossible de charger les données");
@@ -99,18 +118,14 @@ export default function Home() {
     fetchData();
   }, [page]);
 
-
-
   const handleMangaClick = (id) => {
     navigate(`/manga/${id}`);
   };
 
-
-
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <p className="text-xl text-gray-400">{t('common.loading')}</p>
+        <p className="text-xl text-gray-400">{t("common.loading")}</p>
       </div>
     );
   }
@@ -126,8 +141,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0F172A] text-white pb-12">
       <div className="max-w-7xl mx-auto px-6 pt-8">
-
-
         <Carousel
           title="Self Published"
           items={approvedMangas}
@@ -136,28 +149,25 @@ export default function Home() {
               onClick={() => {
                 if (manga.lastChapter) {
                   navigate(`/reader/${manga.lastChapter.id}`, {
-                    state: { mangaId: manga.id }
+                    state: { mangaId: manga.id },
                   });
                 } else {
                   navigate(`/self/${manga.id}`);
                 }
-              }} className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
+              }}
+              className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={`https://back-manganest.onrender.com${manga.cover}`}
+                src={coverToUrl(manga.cover) || fallbackImg}
                 alt={manga.title}
                 loading="lazy"
-
                 className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
-                onError={(e) => {
-                  e.target.src = "https://picsum.photos/200/300";
-                }}
+                onError={(e) => (e.target.src = fallbackImg)}
               />
               <div className="flex-1 min-w-0">
                 <p className="mt-2 text-sm font-semibold line-clamp-2">
                   {manga.title}
                 </p>
-
                 {manga.lastChapter && (
                   <p className="text-blue-400 text-sm mt-1">
                     Chapitre {manga.lastChapter.chapter_number}
@@ -176,7 +186,7 @@ export default function Home() {
               onClick={() => {
                 if (manga.chapterId) {
                   navigate(`/chapter/${manga.chapterId}`, {
-                    state: { mangaId: manga.mangadex_id }
+                    state: { mangaId: manga.mangadex_id },
                   });
                 } else {
                   navigate(`/manga/${manga.mangadex_id}`);
@@ -185,19 +195,13 @@ export default function Home() {
               className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={manga.cover}
+                src={coverToUrl(manga.cover) || fallbackImg}
                 alt={manga.title}
                 className="w-24 h-36 object-cover rounded-xl"
-                onError={(e) => {
-                  e.target.src = "https://picsum.photos/200/300";
-                }}
+                onError={(e) => (e.target.src = fallbackImg)}
               />
-
               <div className="flex-1 min-w-0">
-                <p className="font-semibold line-clamp-2">
-                  {manga.title}
-                </p>
-
+                <p className="font-semibold line-clamp-2">{manga.title}</p>
                 {manga.lastChapter && (
                   <p className="text-blue-400 mt-2 text-sm">
                     Chapitre {manga.lastChapter}
@@ -208,105 +212,87 @@ export default function Home() {
           )}
         />
 
-
         <Carousel
           title="Continuer la lecture"
           items={progressList}
           renderItem={(item) => (
             <div
-              onClick={() => navigate(`/chapter/${item.mangadex_chapter_id}`, {
-                state: {
-                  mangaId: item.mangadex_id,
-                  chapterNumber: item.chapter
-                }
-              })}
+              onClick={() =>
+                navigate(`/chapter/${item.mangadex_chapter_id}`, {
+                  state: {
+                    mangaId: item.mangadex_id,
+                    chapterNumber: item.chapter,
+                  },
+                })
+              }
               className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={item.cover}
-                alt=""
+                src={coverToUrl(item.cover) || fallbackImg}
+                alt="manga.progress"
                 className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
-                onError={(e) => {
-                  e.target.src = "https://picsum.photos/300/420?random=1";
-                }}
+                onError={(e) => (e.target.src = fallbackImg)}
               />
-
               <div className="flex-1 min-w-0">
-                <p className="font-semibold line-clamp-2">
-                  {item.title}
-                </p>
-
+                <p className="font-semibold line-clamp-2">{item.title}</p>
                 <p className="text-blue-400 mt-2 text-sm">
                   Chapitre {item.chapter}
                 </p>
-
-                <p className="text-gray-400 text-sm">
-                  Page {item.page}
-                </p>
+                <p className="text-gray-400 text-sm">Page {item.page}</p>
               </div>
-
             </div>
           )}
-
         />
 
-
-
-
-
-
-
         <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-          {t('home.title')}
+          {t("home.title")}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {latestChapters.map((chapter) => (
-            <div
-              key={chapter.id}
-              onClick={() => handleMangaClick(chapter.id)}
-              className="bg-[#1E293B] rounded-2xl p-6 hover:bg-[#25334b] transition-all cursor-pointer flex gap-5 group"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  src={
-                    chapter.cover ||
-                    "Rien à afficher"
-                  }
+          {latestChapters.map((chapter) => {
+            const url = coverToUrl(chapter.cover) || fallbackImg;
 
-                  alt={chapter.mangaTitle}
-                  className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
-                  onError={(e) => {
-                    e.target.src = "https://picsum.photos/300/420?random=1"; // fallback fiable
+            return (
+              <div
+                key={chapter.id}
+                onClick={() => handleMangaClick(chapter.id)}
+                className="bg-[#1E293B] rounded-2xl p-6 hover:bg-[#25334b] transition-all cursor-pointer flex gap-5 group"
+              >
+                <div className="flex-shrink-0">
+                  <img
+                    src={url}
+                    alt={chapter.mangaTitle || "cover"}
+                    className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
+                    loading="lazy"
+                    onError={(e) => (e.target.src = fallbackImg)}
+                  />
+                </div>
 
-                  }}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-blue-400 transition-colors">
+                    {chapter.mangaTitle}
+                  </h3>
 
-                />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-blue-400 transition-colors">
-                  {chapter.mangaTitle}
-                </h3>
-
-                <p className="text-blue-400 text-xl font-medium mt-3">
-                  {t('home.chapterPrefix')} {chapter.lastChapter}
-                </p>
-
-                {chapter.publishAt && (
-                  <p className="text-gray-400 text-sm mt-2">
-                    {new Date(chapter.publishAt).toLocaleDateString('fr-FR', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric'
-                    })}
+                  <p className="text-blue-400 text-xl font-medium mt-3">
+                    {t("home.chapterPrefix")} {chapter.lastChapter}
                   </p>
-                )}
+
+                  {chapter.publishAt && (
+                    <p className="text-gray-400 text-sm mt-2">
+                      {new Date(chapter.publishAt).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+
       <Pagination
         page={page}
         setPage={setPage}
@@ -314,5 +300,4 @@ export default function Home() {
       />
     </div>
   );
-
 }
