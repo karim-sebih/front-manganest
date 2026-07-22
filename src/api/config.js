@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000" || "https://back-manganest.onrender.com/api",
   timeout: 50000,
   headers: {
     'Content-Type': 'application/json',          // ← ajoute ça si absent
