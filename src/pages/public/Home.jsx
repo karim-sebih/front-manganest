@@ -9,7 +9,7 @@ import { GetAllSelfManga } from "../../api/selfmanga.js";
 import { GetChaptersByManga } from "../../api/chapter.js";
 import { getLibraryWithLatest } from "../../api/library";
 
-
+const API_URL = import.meta.env.VITE_API_URL || "https://back-manganest.onrender.com";
 
 export default function Home() {
   const { t } = useTranslation();
