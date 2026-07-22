@@ -86,6 +86,7 @@ export default function Home() {
         setLibraryLatest(libraryData);
         setMangas(mangaData?.mangas || []);
         setLatestChapters(chapterData?.chapters || []);
+        console.log("DEBUG latestChapters sample:", chapterData?.chapters?.[0]);
         setProgressList(progressData);
 
       } catch (err) {
@@ -269,16 +270,14 @@ export default function Home() {
             >
               <div className="flex-shrink-0">
                 <img
-                  src={
-                    chapter.cover ||
-                    "Rien à afficher"
-                  }
+                  src={chapter.cover}
+                  alt={chapter.mangaTitle}
 
                   alt={chapter.mangaTitle}
                   className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
                   onError={(e) => {
-                    e.target.src = "https://picsum.photos/300/420?random=1"; // fallback fiable
-
+                    console.log("DEBUG img failed for:", chapter);
+                    e.target.src = "https://picsum.photos/300/420?random=1";
                   }}
 
                 />
