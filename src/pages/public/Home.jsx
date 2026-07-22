@@ -144,9 +144,7 @@ export default function Home() {
               }} className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={`https://back-manganest.onrender.com
-
-${manga.cover}`}
+                src={`https://back-manganest.onrender.com${manga.cover}`}
                 alt={manga.title}
                 loading="lazy"
 

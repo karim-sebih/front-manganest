@@ -144,9 +144,7 @@ export default function CreatorDashboard() {
                                         className="cursor-pointer flex gap-3 items-center"
                                     >
                                         <img
-                                            src={`https://back-manganest.onrender.com
-
-${manga.cover}`}
+                                            src={`https://back-manganest.onrender.com${manga.cover}`}
                                             alt={manga.title}
                                             className="w-12 h-16 object-cover rounded"
                                         />

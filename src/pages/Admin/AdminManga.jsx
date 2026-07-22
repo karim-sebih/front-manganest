@@ -113,9 +113,7 @@ export default function AdminManga() {
                     >
                         <div className="flex items-center gap-4">
                             <img
-                                src={`https://back-manganest.onrender.com
-
-${manga.cover}`}
+                                src={`https://back-manganest.onrender.com${manga.cover}`}
                                 alt=""
                                 className="w-14 h-20 object-cover rounded"
                             />
@@ -226,9 +224,7 @@ ${manga.cover}`}
                             {previewPages.map((page) => (
                                 <img
                                     key={page.id}
-                                    src={`https://back-manganest.onrender.com
-
-${page.image_url}`}
+                                    src={`https://back-manganest.onrender.com${page.image_url}`}
                                     className="w-full max-w-4xl rounded"
                                     loading="lazy"
                                     alt="page"

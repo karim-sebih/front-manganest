@@ -58,9 +58,7 @@ export default function Reader() {
                 {pages.map((page) => (
                     <img
                         key={page.id}
-                        src={`https://back-manganest.onrender.com
-
-${page.image_url}`}
+                        src={`https://back-manganest.onrender.com${page.image_url}`}
                         className="w-full max-w-2xl rounded"
                         loading="lazy"
                         alt="page"
