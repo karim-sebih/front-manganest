@@ -15,12 +15,14 @@ i18n
         },
 
         backend: {
-            loadPath: "http://localhost:3000/translations/{{lng}}",
+            loadPath: "https://back-manganest.onrender.com
+
+                / translations / {{ lng }}",
             requestOptions: {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-                },
-            },
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+        },
+    },
         },
 
     });
