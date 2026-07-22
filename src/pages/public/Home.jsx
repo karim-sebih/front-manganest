@@ -123,6 +123,7 @@ export default function Home() {
   };
 
   if (loading) {
+    console.log("DEBUG cover type/value:", typeof chapter.cover, chapter.cover);
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <p className="text-xl text-gray-400">{t("common.loading")}</p>
