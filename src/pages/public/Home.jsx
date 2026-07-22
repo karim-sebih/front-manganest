@@ -86,7 +86,6 @@ export default function Home() {
         setLibraryLatest(libraryData);
         setMangas(mangaData?.mangas || []);
         setLatestChapters(chapterData?.chapters || []);
-        console.log("DEBUG latestChapters sample:", chapterData?.chapters?.[0]);
         setProgressList(progressData);
 
       } catch (err) {
@@ -145,7 +144,7 @@ export default function Home() {
               }} className="bg-[#1E293B] rounded-2xl p-4 hover:bg-[#25334b] transition-all cursor-pointer flex gap-4 w-[300px]"
             >
               <img
-                src={`https://back-manganest.onrender.com${manga.cover}`}
+                src={`http://localhost:3000${manga.cover}`}
                 alt={manga.title}
                 loading="lazy"
 
@@ -270,14 +269,16 @@ export default function Home() {
             >
               <div className="flex-shrink-0">
                 <img
-                  src={chapter.cover}
-                  alt={chapter.mangaTitle}
+                  src={
+                    chapter.cover ||
+                    "Rien à afficher"
+                  }
 
                   alt={chapter.mangaTitle}
                   className="w-24 h-36 object-cover rounded-xl flex-shrink-0"
                   onError={(e) => {
-                    console.log("DEBUG img failed for:", chapter);
-                    e.target.src = "https://picsum.photos/300/420?random=1";
+                    e.target.src = "https://picsum.photos/300/420?random=1"; // fallback fiable
+
                   }}
 
                 />
